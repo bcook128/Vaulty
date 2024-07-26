@@ -38,6 +38,7 @@ Vaulty is designed to store passwords securely on your local machine. While it e
 - **Bash**: The scripting language used for developing Vaulty.
 - **OpenSSL**: For encrypting and decrypting passwords.
 - **pbcopy**: For clipboard integration on macOS.
+- **htpasswd**: For handling authentication
 
 ## Installation
 
