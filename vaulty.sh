@@ -103,7 +103,7 @@ options=("Add profile" "Find profile data" "Retrieve all profile data" "Update p
 # Function to print the menu
 print_menu() {
     clear
-    printf "%b\n" "${BLUE}What would you like to do?${NC}"
+    printf "%b\n" "${BLUE}What would you like to do? ${YELLOW}(navigate with vim keys)${NC}"
     for i in "${!options[@]}"; do
         if [[ $i -eq $selected ]]; then
             printf "%b\n" "${YELLOW}> ${options[$i]}${NC}"
@@ -122,10 +122,10 @@ while true; do
     read -n 1 -s key
 
     case $key in
-        "w") 
+        "k")
             selected=$(( (selected - 1 + ${#options[@]}) % ${#options[@]} ))
             ;;
-        "s")
+        "j")
             selected=$(( (selected + 1) % ${#options[@]} ))
             ;;
         "")
