@@ -1,0 +1,31 @@
+#!/bin/bash
+
+destination="$HOME/.local/share/Vaulty"
+
+# Create directory in user's home dir
+if [[ ! -d "$destination" ]]; then
+    mkdir -p "$destination"
+fi
+
+# Copy script files to destination
+cp ./*.sh "$destination"
+
+# Make main script executable
+chmod +x "$destination/vaulty.sh"
+
+# Ensure the bin directory exists
+if [[ ! -d "$HOME/.local/bin" ]]; then
+    mkdir -p "$HOME/.local/bin"
+fi
+
+# Create a symbolic link to the main script in user's bin dir
+ln -sf "$destination/vaulty.sh" "$HOME/.local/bin/vaulty"
+
+# Inform the user to add ~/.local/bin to their PATH if not already included
+if ! echo "$PATH" | grep -q "$HOME/.local/bin"; then
+    echo "Please add $HOME/.local/bin to your PATH."
+    echo "You can add the following line to your ~/.bashrc or ~/.zshrc file:"
+    echo 'export PATH="$HOME/.local/bin:$PATH"'
+fi
+
+echo "Vaulty has been installed successfully!"
