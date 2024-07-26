@@ -5,10 +5,10 @@ create() {
     read website
     printf "%b" "${BLUE}Username: ${NC}"
     read username
-    printf "%b" "${YELLOW}(c)reate or (g)enerate password? ${NC}"
+    printf "%b" "${YELLOW}(a)dd or (g)enerate password? ${NC}"
     read choice
 
-    if [ "$choice" == "c" ]; then
+    if [ "$choice" == "a" ]; then
         while true; do
             printf "%b" "${BLUE}Password: ${NC}"
             read -s password
@@ -28,7 +28,7 @@ create() {
     encrypted_password=$(printf "%s" "$password" | openssl enc -aes-128-cbc -a -salt -pbkdf2 -pass pass:"$salt")
 
     # Save the record to the file
-    printf "%s,%s,%s,%s\n" "$website" "$username" "$salt" "$encrypted_password" >> passwords.txt
+    printf "%s,%s,%s,%s\n" "$website" "$username" "$salt" "$encrypted_password" >> $HOME/.local/share/Vaulty/passwords.txt
 
     printf "%b\n" "${GREEN}Record saved${NC}"
 }

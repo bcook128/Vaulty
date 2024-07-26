@@ -1,29 +1,29 @@
 #!/bin/bash
 
 # Source the necessary files
-source colors.sh
-source create.sh
-source retrieve.sh
-source update.sh
-source delete.sh
+source $HOME/.local/share/Vaulty/colors.sh
+source $HOME/.local/share/Vaulty/create.sh
+source $HOME/.local/share/Vaulty/retrieve.sh
+source $HOME/.local/share/Vaulty/update.sh
+source $HOME/.local/share/Vaulty/delete.sh
 
 # Function to display ASCII art in the middle of the screen
 display_ascii_art() {
     lockImg='
                                    
-                                                          ^jEQBQDj^             
-                                                       r#@@@@@@@@@#r           
-                                                       ?@@@#x_`_v#@@@x          
-                                                       g@@@!     !@@@Q          
-                                                       Q@@@_     _@@@B          
-                                                    rgg@@@@QgggggQ@@@@ggr       
-                                                    Y@@@@@@@@@@@@@@@@@@@Y       
-                                                    Y@@@@@@@Qx^xQ@@@@@@@Y       
-                                                    Y@@@@@@@^   ~@@@@@@@Y       
-                                                    Y@@@@@@@@r r#@@@@@@@Y       
-                                                    Y@@@@@@@@c,c@@@@@@@@Y       
-                                                    Y@@@@@@@@@@@@@@@@@@@Y       
-                                                    v###################v       
+                ,dO@@@Db,
+              r#@@@@@@@@@#r
+             ?@@@#x_`_v#@@@x
+             g@@@!     !@@@Q
+             Q@@@_     _@@@B
+          rgg@@@@QgggggQ@@@@ggr
+          Y@@@@@@@@@@@@@@@@@@@Y
+          Y@@@@@@@Qx^xQ@@@@@@@Y
+          Y@@@@@@@^   ~@@@@@@@Y
+          Y@@@@@@@@r r#@@@@@@@Y
+          Y@@@@@@@@c,c@@@@@@@@Y
+          Y@@@@@@@@@@@@@@@@@@@Y
+          v###################v
                                                                 
     '
     printf "%s\n" "$lockImg"
@@ -72,17 +72,17 @@ create_master_password() {
     encrypted_master_password=$(hash_master_password "$master_password")
 
     # Store the encrypted master password in passwords.txt
-    printf "%b\n" "$encrypted_master_password" > passwords.txt
+    printf "%b\n" "$encrypted_master_password" > $HOME/.local/share/Vaulty/passwords.txt
     printf "%b\n" "${GREEN}Master password created and stored.${NC}"
 }
 
 # Check if passwords.txt exists
-if [ ! -f "passwords.txt" ]; then
+if [ ! -f "$HOME/.local/share/Vaulty/passwords.txt" ]; then
     printf "%b\n" "${YELLOW}No passwords file found.${NC}"
     create_master_password
 else
     # Read the encrypted master password from passwords.txt
-    encrypted_master_password=$(head -n 1 passwords.txt)
+    encrypted_master_password=$(head -n 1 $HOME/.local/share/Vaulty/passwords.txt)
     
     printf "%b\n" "${BLUE}Please enter the master password to proceed:${NC}"
     read -s entered_password
@@ -103,6 +103,7 @@ options=("Add profile" "Find profile data" "Retrieve all profile data" "Update p
 # Function to print the menu
 print_menu() {
     clear
+    display_ascii_art
     printf "%b\n" "${BLUE}What would you like to do? ${YELLOW}(navigate with vim keys)${NC}"
     for i in "${!options[@]}"; do
         if [[ $i -eq $selected ]]; then

@@ -18,7 +18,7 @@ rehash_passwords() {
     temp_file=$(mktemp)
 
     # Read the master password and salt from the first row
-    master_password_line=$(head -n 1 passwords.txt)
+    master_password_line=$(head -n 1 $HOME/.local/share/Vaulty/passwords.txt)
     master_password=$(echo "$master_password_line" | cut -d',' -f1)
     salt=$(echo "$master_password_line" | cut -d',' -f2)
     salt=$(head -c 16 /dev/urandom | base64)
@@ -27,7 +27,7 @@ rehash_passwords() {
     printf "%b\n" "$master_password_line" >> "$temp_file"
 
     # Read the remaining password records and rehash them
-    tail -n +2 passwords.txt |
+    tail -n +2 $HOME/.local/share/Vaulty/passwords.txt |
     while IFS=',' read -r website username salt encrypted_password; do
         # Decrypt the password
         password=$(echo "$encrypted_password" | openssl enc -d -aes-128-cbc -a -salt -pbkdf2 -pass pass:"$salt")
@@ -40,7 +40,7 @@ rehash_passwords() {
     done
 
     # Replace the original passwords file with the updated temp file
-    mv "$temp_file" passwords.txt
+    mv "$temp_file" $HOME/.local/share/Vaulty/passwords.txt
 }
 
 retrieve() {
@@ -56,7 +56,7 @@ retrieve() {
         fi
 
         # Read the file and search for the corresponding website
-        profile=$(grep "^$website," passwords.txt)
+        profile=$(grep "^$website," $HOME/.local/share/Vaulty/passwords.txt)
         
         if [ -z "$profile" ]; then
             printf "%b\n" "${RED}No profile found for the given website. Please try again.${NC}"
@@ -99,13 +99,13 @@ retrieve() {
 
 retrieve_all() {
     rehash_passwords
-    if [ ! -s passwords.txt ]; then
+    if [ ! -s $HOME/.local/share/Vaulty/passwords.txt ]; then
         printf "%b\n" "${RED}No profiles found.${NC}"
         return
     fi
 
     # Skip the first line (header)
-    tail -n +2 passwords.txt |
+    tail -n +2 $HOME/.local/share/Vaulty/passwords.txt |
     while IFS=',' read -r website username salt encrypted_password; do
         # Decrypt the password
         password=$(echo "$encrypted_password" | openssl enc -d -aes-128-cbc -a -salt -pbkdf2 -pass pass:"$salt")

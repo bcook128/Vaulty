@@ -1,13 +1,13 @@
 #!/bin/bash
 
-source password_check.sh
+source $HOME/.local/share/Vaulty/password_check.sh
 
 update() {
     printf "%b" "${BLUE}Enter the website name to update the profile: ${NC}"
     read website
 
     # Check if the profile exists
-    if ! grep -q "^$website," passwords.txt; then
+    if ! grep -q "^$website," $HOME/.local/share/Vaulty/passwords.txt; then
         printf "%b\n" "${RED}No profile found for the given website.${NC}"
         return
     fi
@@ -46,7 +46,7 @@ update() {
         if [ "$found_website" = "$website" ]; then
             # Update username if provided
             if [ -n "$new_username" ]; then
-                sed -i '' "s|^$website,[^,]*|$website,$new_username|" passwords.txt
+                sed -i '' "s|^$website,[^,]*|$website,$new_username|" $HOME/.local/share/Vaulty/passwords.txt
             fi
             
             # Update password if provided
@@ -59,14 +59,14 @@ update() {
                 # Update the line in passwords.txt
                 if [ -n "$new_username" ]; then
                     # If new username is provided, update username and password
-                    sed -i '' "s|^$website,[^,]*,.*|$website,$new_username,$new_salt,$new_encrypted_password|" passwords.txt
+                    sed -i '' "s|^$website,[^,]*,.*|$website,$new_username,$new_salt,$new_encrypted_password|" $HOME/.local/share/Vaulty/passwords.txt
                 else
                     # If no new username provided, retain the existing username
-                    sed -i '' "s|^$website,[^,]*,.*|$website,$username,$new_salt,$new_encrypted_password|" passwords.txt
+                    sed -i '' "s|^$website,[^,]*,.*|$website,$username,$new_salt,$new_encrypted_password|" $HOME/.local/share/Vaulty/passwords.txt
                 fi
             fi
         fi
-    done < passwords.txt
+    done < $HOME/.local/share/Vaulty/passwords.txt
     
     printf "%b" "${GREEN}Profile successfully updated! ${NC}"
     printf "\n"
